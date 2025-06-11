@@ -7,7 +7,7 @@ public class Main {
         System.out.println(getMessage());
         }
 
-        private static String getMessage () {
+        private static String getMessage() {
             return Msg;
-    }
+        }
 }
