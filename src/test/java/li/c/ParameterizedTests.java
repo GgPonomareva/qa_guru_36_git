@@ -5,8 +5,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.io.File;
+import java.util.stream.Stream;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -51,4 +57,25 @@ public class ParameterizedTests {
                 text(currentAddress), text(permanentAddress));
     }
 
+    static Stream<Arguments> uploadPicture() {
+        return Stream.of(
+                Arguments.of(new File("src/test/resources/images/Voshod.jpeg"), "Voshod.jpeg"),
+                Arguments.of(new File("src/test/resources/images/Zakat.webp"), "Zakat.webp")
+        );
+    }
+
+    @DisplayName("Проверка загрузки файла на demoqa.com")
+    @ParameterizedTest(name = "При загрузке файла {0} в пути загруженного файла должно отображаться {1}")
+
+    @MethodSource()
+    void uploadPicture(File file, String fileName) {
+        open("https://demoqa.com/upload-download");
+
+        $("#uploadFile").uploadFile(file);
+
+        $("#uploadedFilePath").shouldHave(text(fileName));
+
+    }
+
 }
+
